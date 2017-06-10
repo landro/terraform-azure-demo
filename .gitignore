@@ -1,0 +1,7 @@
+.idea/
+ndc_id_rsa
+ndc_id_rsa.pub
+yubikey_id_rsa.pub
+password.txt
+terraform.tfstate
+terraform.tfstate.backup
