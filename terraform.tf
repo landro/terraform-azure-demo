@@ -53,3 +53,29 @@ resource "digitalocean_droplet" "web" {
 output "Web IPs Digital Ocean" {
   value = "${join(", ",digitalocean_droplet.web.*.ipv4_address)}"
 }
+
+# Configure the AWS Provider
+# Will use AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables
+provider "aws" {
+  region = "eu-central-1"
+}
+
+# Looked up manually in aws route 53 console
+# Consider using aws_route53_zone resource instead
+variable "dns_zone_id" {
+  default     = "Z2X1UBSEPFNQNM"
+  description = "DNS hosted zone id"
+  type        = "string"
+}
+
+# Create DNS records for digital ocean web servers
+resource "aws_route53_record" "do" {
+  zone_id = "${var.dns_zone_id}"
+  name    = "do.landro.io."
+  type    = "A"
+  ttl     = 60
+
+  records = [
+    "${digitalocean_droplet.web.*.ipv4_address}",
+  ]
+}
