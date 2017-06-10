@@ -21,7 +21,7 @@ variable "digitalocean_datacenter" {
 # Create SSH key that can be used by droplets
 resource "digitalocean_ssh_key" "ssh" {
   name       = "NDC Oslo 2017"
-  public_key = "${file("ndc_id_rsa.pub")}"
+  public_key = "${file("yubikey_id_rsa.pub")}"
 }
 
 # Create droplet based on centos image
@@ -44,8 +44,8 @@ resource "digitalocean_droplet" "web" {
   }
 
   connection {
-    type        = "ssh"
-    user        = "root"
-    private_key = "${file("ndc_id_rsa")}"
+    type  = "ssh"
+    user  = "root"
+    agent = "true"
   }
 }
