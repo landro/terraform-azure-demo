@@ -32,4 +32,20 @@ resource "digitalocean_droplet" "web" {
   region   = "${var.digitalocean_datacenter}"
   size     = "512mb"
   ssh_keys = ["${digitalocean_ssh_key.ssh.id}"]
+
+  # Install, enable and run Apache httpd right after provisioning instance
+  provisioner "remote-exec" {
+    inline = [
+      "yum -y install httpd",
+      "yum -y install mod_ssl",
+      "systemctl enable httpd",
+      "systemctl start httpd",
+    ]
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "root"
+    private_key = "${file("ndc_id_rsa")}"
+  }
 }
