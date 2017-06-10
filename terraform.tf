@@ -49,3 +49,7 @@ resource "digitalocean_droplet" "web" {
     agent = "true"
   }
 }
+
+output "Web IPs Digital Ocean" {
+  value = "${join(", ",digitalocean_droplet.web.*.ipv4_address)}"
+}
